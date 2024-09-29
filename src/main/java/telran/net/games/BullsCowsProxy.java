@@ -1,6 +1,7 @@
 package telran.net.games;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +45,12 @@ public class BullsCowsProxy implements BullsCowsService {
 	@Override
 	public List<Long> getNotStartedGames() {
 		String strRes = tcpClient.sendAndReceive(new Request("getNotStartedGames", ""));
-		return Arrays.stream(strRes.split(";")).map(s -> Long.valueOf(s)).toList();
+		return checkIfEmpty(strRes);
+	}
+
+	private List<Long> checkIfEmpty(String strRes) {
+		return strRes.isEmpty() ? new ArrayList() 
+				: Arrays.stream(strRes.split(";")).map(s -> Long.valueOf(s)).toList();
 	}
 
 	@Override
@@ -75,19 +81,19 @@ public class BullsCowsProxy implements BullsCowsService {
 	@Override
 	public List<Long> getNotStartedGamesWithGamer(String username) {
 		String strRes = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithGamer", username));
-		return Arrays.stream(strRes.split(";")).map(s -> Long.valueOf(s)).toList();
+		return checkIfEmpty(strRes);
 	}
 
 	@Override
 	public List<Long> getNotStartedGamesWithNoGamer(String username) {
 		String strRes = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithNoGamer", username));
-		return Arrays.stream(strRes.split(";")).map(s -> Long.valueOf(s)).toList();
+		return checkIfEmpty(strRes);
 	}
 
 	@Override
 	public List<Long> getStartedGamesWithGamer(String username) {
 		String strRes = tcpClient.sendAndReceive(new Request("getStartedGamesWithGamer", username));
-		return Arrays.stream(strRes.split(";")).map(s -> Long.valueOf(s)).toList();
+		return checkIfEmpty(strRes);
 	}
 
 }

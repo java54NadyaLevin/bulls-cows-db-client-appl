@@ -49,25 +49,24 @@ public class BullsCowsApplItems {
 	}
 
 	static void startExistingGame(InputOutput io) {
-		try {
-			List<Long> games = bullsCows.getNotStartedGamesWithGamer(username);
+		List<Long> games = bullsCows.getNotStartedGamesWithGamer(username);
+		if (!games.isEmpty()) {
 			games.forEach(io::writeLine);
-			Long getGameId = io.readLong("Enter gameId", "incorrect id"); 
-			if(checkGameAvailable(io, games, getGameId)) {
+			Long getGameId = io.readLong("Enter gameId", "incorrect id");
+			if (checkGameAvailable(io, games, getGameId)) {
 				bullsCows.startGame(getGameId);
 				playGame(io);
-			};
-		} catch (Exception e) {
-			io.writeLine("No games available");
+			}
+		} else {
+			io.writeLine("There are no games to start");
 		}
-		
+
 	}
 
 	private static boolean checkGameAvailable(InputOutput io, List<Long> games, Long getGameId) {
-		
-		if(games.contains(getGameId)) {
+		if (games.contains(getGameId)) {
 			gameId = getGameId;
-		}else {
+		} else {
 			io.writeLine("Incorrect id: this game is not available for you");
 		}
 		return games.contains(getGameId);
@@ -80,33 +79,31 @@ public class BullsCowsApplItems {
 	}
 
 	static void continueGame(InputOutput io) {
-		List<Long> games = new ArrayList();
-		try {
-			games = bullsCows.getStartedGamesWithGamer(username);
+		List<Long> games = bullsCows.getStartedGamesWithGamer(username);
+		if (!games.isEmpty()) {
 			games.forEach(io::writeLine);
 			Long getGameId = io.readLong("Enter id of the game you want to continue", "incorrect id");
-			if(checkGameAvailable(io, games, getGameId)) {
+			if (checkGameAvailable(io, games, getGameId)) {
 				playGame(io);
-			};	
-		} catch (Exception e) {
-			io.writeLine("No games available");
+			}
+		} else {
+			io.writeLine("You don't have active games");
 		}
 
 	}
 
 	static void joinGame(InputOutput io) {
-		try {
-			List<Long> games = bullsCows.getNotStartedGamesWithNoGamer(username);
+		List<Long> games = bullsCows.getNotStartedGamesWithNoGamer(username);
+		if (!games.isEmpty()) {
 			games.forEach(io::writeLine);
 			Long getGameId = io.readLong("Enter id of the game you want to join", "incorrect id");
-			if(checkGameAvailable(io, games, getGameId)) {
+			if (checkGameAvailable(io, games, getGameId)) {
 				bullsCows.gamerJoinGame(gameId, username);
 				io.writeLine("You've joined to game with id " + gameId);
-			};
-		} catch (Exception e) {
-			io.writeLine("No games available");
+			} else {
+				io.writeLine("There's no games available");
+			}
 		}
-		
 	}
 
 	static void playGame(InputOutput io) {
@@ -116,7 +113,7 @@ public class BullsCowsApplItems {
 	}
 
 	static void makeMove(InputOutput io) {
-		String guess = io.readStringPredicate("Enter "+ N_DIGITS + " non-repeated digits", "Wrong input",
+		String guess = io.readStringPredicate("Enter " + N_DIGITS + " non-repeated digits", "Wrong input",
 				str -> str.chars().distinct().filter(c -> c >= '0' && c <= '9').count() == N_DIGITS);
 		List<MoveData> moves = bullsCows.moveProcessing(guess, gameId, username);
 		moves.forEach(io::writeLine);
