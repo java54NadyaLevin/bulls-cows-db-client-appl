@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import telran.net.games.model.MoveData;
+import telran.net.games.model.*;
 import telran.net.games.service.BullsCowsService;
 import telran.view.*;
 
